@@ -1,39 +1,43 @@
-from library_oop import Book, Member
+from library_oop import Library
 
-print("=== TESTING CLASS: Member ===")
+print("=== TESTING CLASS: Library ===")
 
-m1 = Member(101, "Chalee", "Chalee@kmail.com")
+library = Library()
 
-b1 = Book(1, "The Alchemist", "Paulo Coelho", 2)
-b2 = Book(2, "Animal Farm", "George Orwell", 1)
+print("\n--- Adding Books ---")
+library.add_book(1, "Animal Farm", "George Orwell", 3)
+library.add_book(2, "The Alchemist", "Paulo Coelho", 2)
+library.add_book(3, "To Kill a Mockingbird", "Harper Lee", 1)
 
-print("\n--- Member info ---")
-print(f"ID: {m1.id}")
-print(f"Name: {m1.name}")
-print(f"Email: {m1.email}")
-print(f"Borrowed books: {len(m1.borrowed_books)}")
+print("\n--- Adding Members ---")
+library.add_member(101, "Chalee", "Chalee@kmail.com")
+library.add_member(102, "Anna", "Anna@kmail.com")
 
-print("\n--- Borrowing books ---")
-m1.borrow_book(b1)
-m1.borrow_book(b2)
+print("\n--- Display Available Books ---")
+library.display_available_books()
 
-print(f"Books borrowed by {m1.name}:")
-for book in m1.borrowed_books:
-    print(f"  - {book.title}")
+print("\n--- Borrowing Books ---")
+library.borrow_book(101, 1)
+library.borrow_book(101, 2)
+library.borrow_book(102, 1)
 
-print("\n--- Trying to borrow more than 3 books ---")
-b3 = Book(3, "The Pragmatic Programmer", "Hunt & Thomas", 1)
-b4 = Book(4, "Design Patterns", "Gang of Four", 1)
-m1.borrow_book(b3)
-m1.borrow_book(b4)
+print("\n--- Display Member Books ---")
+library.display_member_books(101)
+library.display_member_books(102)
 
-print(f"\nBorrowed books count: {len(m1.borrowed_books)}")
+print("\n--- Available Books After Borrowing ---")
+library.display_available_books()
 
-print("\n--- Returning a book ---")
-m1.return_book(b1)
-print(f"Books remaining after return:")
-for book in m1.borrowed_books:
-    print(f"  - {book.title}")
+print("\n--- Returning Books ---")
+library.return_book(101, 1)
+library.return_book(102, 1)
 
-print("\n--- Returning a book not borrowed ---")
-m1.return_book(b1)
+print("\n--- Display After Returns ---")
+library.display_member_books(101)
+library.display_available_books()
+
+print("\n--- Error Handling Tests ---")
+library.borrow_book(999, 1)
+library.borrow_book(101, 999)
+library.return_book(999, 1)
+library.display_member_books(999)
