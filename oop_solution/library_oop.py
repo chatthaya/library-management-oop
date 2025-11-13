@@ -50,42 +50,53 @@ class Member:
     
     
 class Library:
-    def __init__(self):
-        self.books = []
-        self.members = []
-        self.borrowed_books = []
+    """A simple library system to manage books and members."""
 
-    def add_book(self, id, title, author, total_copies):
-        if any(book.id == id for book in self.books):
-            print(f"Error: Book ID {id} already exists!")
+    def __init__(self):
+        self.book_list = []
+        self.member_list = []
+        self.borrowed_records = []
+
+        self.members = self.member_list
+        self.books = self.book_list
+        self.borrowed_books = self.borrowed_records
+        
+    def add_book(self, book_id, title, author, total_copies):
+        """Add a new book to the library."""
+        if any(book.id == book_id for book in self.book_list):
+            print(f"Error: Book ID {book_id} already exists!")
             return
 
-        book = Book(id, title, author, total_copies)
-        self.books.append(book)
+        book = Book(book_id, title, author, total_copies)
+        self.book_list.append(book)
         print(f"Book '{book.title}' added successfully!")
 
     def find_book(self, book_id):
-        for book in self.books:
+        """Find and return a book by its ID."""
+        for book in self.book_list:
             if book.id == book_id:
                 return book
         return None
 
-    def add_member(self, id, name, email="N/A"):
-        if any(member.id == id for member in self.members):
-            print(f"Error: Member ID {id} already exists!")
+    def add_member(self, member_id, name, email="N/A"):
+        """Register a new library member."""
+        if any(member.id == member_id for member in self.member_list):
+            print(f"Error: Member ID {member_id} already exists!")
             return
 
-        member = Member(id, name, email)
-        self.members.append(member)
+        member = Member(member_id, name, email)
+        self.member_list.append(member)
         print(f"Member '{member.name}' registered successfully!")
 
     def find_member(self, member_id):
-        for member in self.members:
+        """Find and return a member by ID."""
+        for member in self.member_list:
             if member.id == member_id:
                 return member
         return None
 
     def borrow_book(self, member_id, book_id):
+        """Allow a member to borrow a book."""
         member = self.find_member(member_id)
         book = self.find_book(book_id)
 
@@ -97,7 +108,7 @@ class Library:
             return False
 
         if member.borrow_book(book):
-            self.borrowed_books.append({
+            self.borrowed_records.append({
                 "member_id": member.id,
                 "member_name": member.name,
                 "book_id": book.id,
@@ -108,6 +119,7 @@ class Library:
         return False
 
     def return_book(self, member_id, book_id):
+        """Allow a member to return a borrowed book."""
         member = self.find_member(member_id)
         book = self.find_book(book_id)
 
@@ -116,8 +128,8 @@ class Library:
             return False
 
         if member.return_book(book):
-            self.borrowed_books = [
-                record for record in self.borrowed_books
+            self.borrowed_records = [
+                record for record in self.borrowed_records
                 if not (
                     record["member_id"] == member.id
                     and record["book_id"] == book.id
@@ -128,8 +140,9 @@ class Library:
         return False
 
     def display_available_books(self):
+        """Display all available books in the library."""
         print("\n=== Available Books ===")
-        for book in self.books:
+        for book in self.book_list:
             if book.available_copies > 0:
                 print(
                     f"{book.title} by {book.author} "
@@ -137,6 +150,7 @@ class Library:
                 )
 
     def display_member_books(self, member_id):
+        """Display all books currently borrowed by a specific member."""
         member = self.find_member(member_id)
         if not member:
             print("Error: Member not found!")
